@@ -23,9 +23,9 @@ dependencies:
   screen_protector: ^1.2.0
   
   # Utilities
-  url_launcher: ^6.2.1
-  path_provider: ^2.1.5
-  webview_flutter: ^4.7.0
+  url_launcher: ^6.3.0
+  path_provider: ^2.1.4
+  webview_flutter: ^4.8.0
   
   # State Management (Simple provider or native ValueNotifier for now)
   provider: ^6.1.1
