@@ -24,6 +24,7 @@ dependencies:
   
   # Utilities
   url_launcher: ^6.2.1
+  path_provider: ^2.1.5
   webview_flutter: ^4.7.0
   
   # State Management (Simple provider or native ValueNotifier for now)
