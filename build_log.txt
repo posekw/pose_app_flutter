@@ -1,0 +1,48 @@
+Launching lib\main.dart on SM S906E in debug mode...
+Running Gradle task 'assembleDebug'...                          
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: C:\Users\Admin\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_messaging-14.7.10\android\src\main\java\io\flutter\plugins\firebase\messaging\FlutterFirebaseMessagingPlugin.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 warnings
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':path_provider_android:compileDebugJavaWithJavac'.
+> Could not resolve all files for configuration ':path_provider_android:androidJdkImage'.
+   > Failed to transform core-for-system-modules.jar to match attributes {artifactType=_internal_android_jdk_image, org.gradle.libraryelements=jar, org.gradle.usage=java-runtime}.
+      > Execution failed for JdkImageTransform: C:\Users\Admin\AppData\Local\Android\sdk\platforms\android-35\core-for-system-modules.jar.
+         > Error while executing process C:\Program Files\Android\Android Studio\jbr\bin\jlink.exe with arguments {--module-path C:\Users\Admin\.gradle\caches\transforms-3\3d977d056761f8c1d895c52af7bfa448\transformed\output\temp\jmod --add-modules java.base --output C:\Users\Admin\.gradle\caches\transforms-3\3d977d056761f8c1d895c52af7bfa448\transformed\output\jdkImage --disable-plugin system-modules}
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 4s
+Running Gradle task 'assembleDebug'...                              5.3s
+
+┌─ Flutter Fix ────────────────────────────────────────────────────────────────────────────────────┐
+│ [!] This is likely due to a known bug in Android Gradle Plugin (AGP) versions less than 8.2.1,   │
+│ when                                                                                             │
+│   1. setting a value for SourceCompatibility and                                                 │
+│   2. using Java 21 or above.                                                                     │
+│ To fix this error, please upgrade your AGP version to at least 8.2.1. The version of AGP that    │
+│ your project uses is likely defined in:                                                          │
+│ F:\Docler\pose_app_flutter\android\settings.gradle,                                              │
+│ in the 'plugins' closure (by the number following "com.android.application").                    │
+│  Alternatively, if your project was created with an older version of the templates, it is likely │
+│ in the buildscript.dependencies closure of the top-level build.gradle:                           │
+│ F:\Docler\pose_app_flutter\android\build.gradle,                                                 │
+│ as the number following "com.android.tools.build:gradle:".                                       │
+│                                                                                                  │
+│ For more information, see:                                                                       │
+│ https://issuetracker.google.com/issues/294137077                                                 │
+│ https://github.com/flutter/flutter/issues/156304                                                 │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+Error: Gradle task assembleDebug failed with exit code 1
