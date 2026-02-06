@@ -6,12 +6,7 @@ import 'widgets/main_nav.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,8 +18,6 @@ class MyApp extends StatelessWidget {
       title: 'PoseKW Gallery',
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFF121212), // Global dark background
         colorScheme: ColorScheme.fromSeed(
