@@ -58,7 +58,8 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
 
   Future<void> _enableSecureMode() async {
     try {
-      await ScreenProtector.preventScreenshotOn();
+      // DISABLED: Screen protection removed due to iOS crash
+      // await ScreenProtector.preventScreenshotOn();
     } catch (e) {
       print('Error verifying security: $e');
     }
@@ -66,7 +67,8 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
 
   Future<void> _disableSecureMode() async {
     try {
-      await ScreenProtector.preventScreenshotOff();
+      // DISABLED: Screen protection removed due to iOS crash
+      // await ScreenProtector.preventScreenshotOff();
     } catch (e) {
       print('Error clearing security: $e');
     }
