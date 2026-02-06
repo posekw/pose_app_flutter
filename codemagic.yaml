@@ -8,6 +8,7 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
+          source: true
     environment:
       flutter: stable
       xcode: latest
@@ -19,7 +20,7 @@ workflows:
 
       - name: Pod install
         script: |
-          find . -name "Podfile" -exec dir "{}" \;
+          find . -name "Podfile" -execdir pwd \;
           cd ios && pod install
       - name: Build IPA
         script: |
