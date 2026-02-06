@@ -15,7 +15,7 @@ dependencies:
   intl: ^0.20.2
   
   # UI & Design
-  # cached_network_image: ^3.3.0  # REMOVED: Causes path_provider_foundation crash
+  cached_network_image: ^3.3.1
   flutter_staggered_grid_view: ^0.7.0
   glassmorphism: ^3.0.0
   shimmer: ^3.0.0

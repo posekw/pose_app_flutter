@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:cached_network_image/cached_network_image.dart'; // REMOVED: causes path_provider crash
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/gallery_detail_model.dart';
 import '../models/cart_item_model.dart';
 import '../services/cart_service.dart';
@@ -104,16 +104,16 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
                 panEnabled: true,
                 minScale: 0.5,
                 maxScale: 4,
-                child: Image.network(
-                  image.url,
+                child: CachedNetworkImage(
+                  imageUrl: image.url,
                   fit: BoxFit.contain,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) => const Center(
+                  // MEMORY OPTIMIZATION: Downsample image to screen height to save RAM
+                  // A 4000px height image uses ~48MB RAM. Resizing to ~2000px uses ~12MB.
+                  memCacheHeight: MediaQuery.of(context).size.height.toInt() * 2, // *2 for Retina/HighDPI
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
                     child: Icon(Icons.broken_image, color: Colors.white, size: 50),
                   ),
                 ),
