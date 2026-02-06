@@ -26,8 +26,8 @@ dependencies:
   url_launcher_android: ^6.3.14 # Forced upgrade to fix v1 embedding Android build error
   # url_launcher_android: ^6.3.10  # REMOVED: Causes iOS crash
   path_provider_android: ^2.2.22  # Required for Android, latest version fixes v1 embedding
-  webview_flutter: ^4.8.0
-  webview_flutter_android: ^3.16.9
+  webview_flutter: ^4.4.2
+  webview_flutter_android: ^3.13.0
   
   # State Management (Simple provider or native ValueNotifier for now)
   provider: ^6.1.1
