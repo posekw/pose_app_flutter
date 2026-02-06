@@ -6,7 +6,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: 'main'
+        - pattern: main
           include: true
           source: true
     environment:
@@ -15,14 +15,11 @@ workflows:
       cocoapods: default
     scripts:
       - name: Get Flutter packages
-        script: |
-          flutter packages pub get
+        script: flutter packages pub get
       - name: Pod install
-        script: |
-          cd ios && pod install
+        script: cd ios && pod install
       - name: Build IPA
-        script: |
-          flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
