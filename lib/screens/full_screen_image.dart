@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart'; // REMOVED: causes path_provider crash
 import '../models/gallery_detail_model.dart';
 import '../models/cart_item_model.dart';
 import '../services/cart_service.dart';
@@ -102,13 +102,18 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
                 panEnabled: true,
                 minScale: 0.5,
                 maxScale: 4,
-                child: CachedNetworkImage(
-                  imageUrl: image.url,
+                child: Image.network(
+                  image.url,
                   fit: BoxFit.contain,
-                  placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(color: Colors.white)),
-                  errorWidget: (context, url, ex) => const Center(
-                      child: Icon(Icons.broken_image, color: Colors.white, size: 50)),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.broken_image, color: Colors.white, size: 50),
+                  ),
                 ),
               );
             },
@@ -119,12 +124,15 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
             child: Center(
               child: Opacity(
                 opacity: 0.15, 
-                child: CachedNetworkImage(
-                  imageUrl: 'https://posekw.com/wp-content/uploads/2026/01/logo-watermark-pose-2.png',
+                child: Image.network(
+                  'https://posekw.com/wp-content/uploads/2026/01/logo-watermark-pose-2.png',
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.contain,
-                  placeholder: (context, url) => const SizedBox(),
-                  errorWidget: (context, url, error) => const SizedBox(),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const SizedBox();
+                  },
+                  errorBuilder: (context, error, stackTrace) => const SizedBox(),
                 ),
               ),
             ),
