@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PoseKW Gallery',
+      title: 'Pose Media',
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
       theme: ThemeData(
