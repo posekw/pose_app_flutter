@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/gallery_detail_model.dart';
-import '../models/gallery_detail_model.dart';
 import '../models/cart_item_model.dart';
 import '../services/cart_service.dart';
-
 import '../services/fab_control_service.dart';
-
 import 'package:screen_protector/screen_protector.dart';
 
 class FullScreenImageScreen extends StatefulWidget {
