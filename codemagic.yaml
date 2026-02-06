@@ -8,7 +8,6 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
-          source: true
     environment:
       flutter: stable
       xcode: latest
