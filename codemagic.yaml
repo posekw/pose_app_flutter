@@ -1,5 +1,5 @@
 workflows:
-  ios-release:
+  ios-workflow:
     name: iOS Publication
     max_build_duration: 60
     triggering:
@@ -8,6 +8,7 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
+          source: true
     environment:
       flutter: stable
       xcode: latest
@@ -16,10 +17,8 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter packages pub get
-
       - name: Pod install
         script: |
-          find . -name "Podfile" -execdir pwd \;
           cd ios && pod install
       - name: Build IPA
         script: |
