@@ -10,7 +10,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final TargetPlatform? platformOverride;
+
+  const MyApp({super.key, this.platformOverride});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
           surface: const Color(0xFF1E1E1E),
         ),
         useMaterial3: true,
+        platform: platformOverride,
       ),
       home: const MainNavigation(),
     );
