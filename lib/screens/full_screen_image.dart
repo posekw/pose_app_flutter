@@ -31,7 +31,8 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
-    _enableSecureMode();
+    // DISABLED: Screen protection causes iOS crash without proper permissions
+    // _enableSecureMode();
     // Enable Global Add to Cart FAB
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateFab();
@@ -40,7 +41,8 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
 
   @override
   void dispose() {
-    _disableSecureMode();
+    // DISABLED: Screen protection causes iOS crash without proper permissions
+    // _disableSecureMode();
     _pageController.dispose();
     // Reset FAB
     FabControlService().resetToDefault();
