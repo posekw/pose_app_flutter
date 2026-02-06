@@ -6,6 +6,7 @@ import '../screens/destinations_screen.dart';
 import '../screens/all_galleries_screen.dart';
 import '../screens/cart_screen.dart';
 import '../screens/appointments_screen.dart';
+import 'lazy_load_indexed_stack.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -62,7 +63,7 @@ class _MainNavigationState extends State<MainNavigation> {
         builder: (context, child) {
           return Scaffold(
             extendBody: true,
-            body: IndexedStack(
+            body: LazyLoadIndexedStack(
               index: _selectedIndex,
               children: [
                 _buildNavigator(0, const HomeScreen()),
