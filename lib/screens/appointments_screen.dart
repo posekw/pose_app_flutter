@@ -1,38 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:webview_flutter/webview_flutter.dart'; // REMOVED: Causes iOS crash
 
-class AppointmentsScreen extends StatefulWidget {
+class AppointmentsScreen extends StatelessWidget {
   const AppointmentsScreen({super.key});
-
-  @override
-  State<AppointmentsScreen> createState() => _AppointmentsScreenState();
-}
-
-class _AppointmentsScreenState extends State<AppointmentsScreen> {
-  late final WebViewController _controller;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0xFF121212))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (String url) {
-            setState(() { _isLoading = true; });
-          },
-          onPageFinished: (String url) {
-            setState(() { _isLoading = false; });
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('Webview Error: ${error.description}');
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse('https://posekw.com/?app_booking=1'));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +14,24 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(color: Color(0xFFFF1744)), // Red accent
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.calendar_month_outlined, size: 80, color: Colors.white.withOpacity(0.5)),
+            const SizedBox(height: 16),
+            const Text(
+              'Booking Coming Soon',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              'Please check back later or contact us directly.',
+              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
