@@ -8,6 +8,10 @@ workflows:
       branch_patterns:
         - pattern: main
           include: true
+        - pattern: ios-stable
+          include: true
+        - pattern: android-stable
+          include: true
     environment:
       flutter: stable
       xcode: latest
