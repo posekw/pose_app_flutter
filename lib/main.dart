@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'widgets/main_nav.dart';
 
 void main() async {
+  // CRITICAL: Initialize Flutter bindings before any plugin usage
+  // This fixes path_provider_foundation crash (null pointer at 0x0000000000000000)
   WidgetsFlutterBinding.ensureInitialized();
   
   runApp(const MyApp());
