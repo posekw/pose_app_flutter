@@ -17,32 +17,36 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      vars:
-        FLUTTER_BUILD_MODE: release
-    ios_signing:
-      distribution_type: app_store
-      bundle_identifier: com.posekw.gallery
     scripts:
       - name: Update CocoaPods
-        script: sudo gem install cocoapods
+        script: |
+          echo "Installing latest CocoaPods..."
+          sudo gem install cocoapods
+          pod --version
       - name: Deep Clean
         script: |
+          echo "Cleaning Flutter project..."
           flutter clean
           rm -rf ios/Pods
           rm -rf ios/Podfile.lock
           rm -rf ios/.symlinks
           rm -rf ~/Library/Developer/Xcode/DerivedData
+          echo "Clean complete!"
       - name: Get Flutter packages
         script: flutter pub get
       - name: Pod install
         script: |
           cd ios
           pod repo update
-          pod install
+          pod install --verbose
           cd ..
+      - name: Set up code signing
+        script: xcode-project use-profiles
       - name: Build IPA
         script: |
+          echo "Building IPA in RELEASE mode..."
           flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+          echo "Build complete!"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
