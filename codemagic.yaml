@@ -2,6 +2,7 @@ workflows:
   ios-release:
     name: iOS Publication
     max_build_duration: 60
+    instance_type: mac_mini_m2
     triggering:
       events:
         - push
@@ -15,7 +16,12 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-      cocoapods: 1.16.2  # Use latest for privacy manifest support
+      cocoapods: default
+      vars:
+        FLUTTER_BUILD_MODE: release
+    ios_signing:
+      distribution_type: app_store
+      bundle_identifier: com.posekw.gallery
     scripts:
       - name: Update CocoaPods
         script: sudo gem install cocoapods
@@ -27,14 +33,16 @@ workflows:
           rm -rf ios/.symlinks
           rm -rf ~/Library/Developer/Xcode/DerivedData
       - name: Get Flutter packages
-        script: flutter packages pub get
+        script: flutter pub get
       - name: Pod install
         script: |
           cd ios
           pod repo update
           pod install
+          cd ..
       - name: Build IPA
-        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+        script: |
+          flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -42,3 +50,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        submit_to_app_store: false
