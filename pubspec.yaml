@@ -21,10 +21,9 @@ dependencies:
   shimmer: ^3.0.0
   # screen_protector: ^1.2.0  # REMOVED: Causes iOS crash
   
-  # Utilities
-  url_launcher: ^6.3.1
-  # Platform-specific constraints removed - let Codemagic resolve latest
-  webview_flutter: ^4.10.0
+  # Utilities - DISABLED FOR iOS BUILD
+  # url_launcher: ^6.3.1  # Causes privacy bundle error
+  # webview_flutter: ^4.10.0  # Causes privacy bundle error
   
   # State Management (Simple provider or native ValueNotifier for now)
   provider: ^6.1.1
