@@ -60,8 +60,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
         title: const Text('Book Session', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.black.withOpacity(0.8),
+        backgroundColor: Colors.black,
         elevation: 0,
+        centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(

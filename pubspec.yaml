@@ -1,7 +1,7 @@
 name: pose_gallery_app
 description: A premium Flutter app for Pose Media using Glassmorphism design.
 publish_to: 'none'
-version: 1.0.2+50
+version: 1.0.1+23
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -20,9 +20,9 @@ dependencies:
   glassmorphism: ^3.0.0
   shimmer: ^3.0.0
   
-  # Utilities - Re-enabled with latest versions for iOS Privacy Manifest support
-  url_launcher: ^6.3.1
-  webview_flutter: ^4.10.0
+  # Utilities - let Flutter resolve platform versions automatically
+  url_launcher: ^6.2.0
+  webview_flutter: ^4.4.0
   
   # State Management
   provider: ^6.1.1
