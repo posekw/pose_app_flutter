@@ -1,7 +1,7 @@
 name: pose_gallery_app
 description: A premium Flutter app for Pose Media using Glassmorphism design.
 publish_to: 'none'
-version: 1.0.2+26
+version: 1.0.2+27
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
