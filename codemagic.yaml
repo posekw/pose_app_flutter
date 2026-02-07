@@ -7,11 +7,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: main
-          include: true
         - pattern: ios-stable
-          include: true
-        - pattern: android-stable
           include: true
     environment:
       flutter: stable
@@ -51,7 +47,9 @@ workflows:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
     publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
-        submit_to_app_store: false
+      email:
+        recipients:
+          - c.ronaldo-mut@hotmail.com
+        notify:
+          success: true
+          failure: true
