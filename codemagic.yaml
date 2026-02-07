@@ -1,50 +1,56 @@
+definitions:
+  # Shared scripts
+  scripts:
+    - &clean_and_setup
+      name: Clean and Setup Environment
+      script: |
+        echo "=== STEP 1: Cleaning DerivedData ==="
+        rm -rf ~/Library/Developer/Xcode/DerivedData
+        rm -rf ~/Library/Caches/CocoaPods
+        
+        echo "=== STEP 2: Installing CocoaPods 1.16.2 ==="
+        sudo gem install cocoapods -v 1.16.2
+        pod --version
+        
+        echo "=== STEP 3: Flutter Clean ==="
+        flutter clean
+        
+        echo "=== STEP 4: Get Packages ==="
+        flutter pub get
+        
+        echo "=== STEP 5: Pod Install ==="
+        cd ios
+        rm -rf Pods Podfile.lock .symlinks
+        pod repo update
+        pod install --verbose
+        cd ..
+        
+        echo "=== Environment Ready! ==="
+
 workflows:
-  ios-release:
-    name: iOS Publication
+  ios-build:
+    name: iOS Build
     max_build_duration: 60
     instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: 1.16.2
     triggering:
       events:
         - push
       branch_patterns:
-        - pattern: ios-stable
+        - pattern: ios
           include: true
-        - pattern: ios-clean
-          include: true
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
     scripts:
-      - name: Update CocoaPods
-        script: |
-          echo "Installing latest CocoaPods..."
-          sudo gem install cocoapods
-          pod --version
-      - name: Deep Clean
-        script: |
-          echo "Cleaning Flutter project..."
-          flutter clean
-          rm -rf ios/Pods
-          rm -rf ios/Podfile.lock
-          rm -rf ios/.symlinks
-          rm -rf ~/Library/Developer/Xcode/DerivedData
-          echo "Clean complete!"
-      - name: Get Flutter packages
-        script: flutter pub get
-      - name: Pod install
-        script: |
-          cd ios
-          pod repo update
-          pod install --verbose
-          cd ..
+      - *clean_and_setup
       - name: Set up code signing
         script: xcode-project use-profiles
-      - name: Build IPA
+      - name: Build iOS IPA
         script: |
-          echo "Building IPA in RELEASE mode..."
+          echo "=== Building IPA in RELEASE mode ==="
           flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
-          echo "Build complete!"
+          echo "=== Build Complete! ==="
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
