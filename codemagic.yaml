@@ -17,6 +17,8 @@ workflows:
       xcode: latest
       cocoapods: 1.16.2  # Use latest for privacy manifest support
     scripts:
+      - name: Update CocoaPods
+        script: sudo gem install cocoapods
       - name: Deep Clean
         script: |
           flutter clean
