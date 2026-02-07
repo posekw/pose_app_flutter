@@ -1,13 +1,14 @@
 workflows:
-  ios-release:
-    name: iOS Publication
+  # Clean iOS build - removes problematic plugins before building
+  ios-clean-build:
+    name: iOS Clean Build
     max_build_duration: 60
     instance_type: mac_mini_m2
     triggering:
       events:
         - push
       branch_patterns:
-        - pattern: ios-stable
+        - pattern: main
           include: true
     environment:
       flutter: stable
@@ -28,13 +29,21 @@ workflows:
           rm -rf ios/.symlinks
           rm -rf ~/Library/Developer/Xcode/DerivedData
           echo "Clean complete!"
+      - name: Remove Problematic Plugins
+        script: |
+          echo "Removing webview_flutter and url_launcher..."
+          # Comment out problematic plugins in pubspec.yaml
+          sed -i.bak 's/^  url_launcher:/#  url_launcher:/' pubspec.yaml
+          sed -i.bak 's/^  webview_flutter:/#  webview_flutter:/' pubspec.yaml
+          cat pubspec.yaml | grep -E "(url_launcher|webview_flutter)"
+          echo "Plugins commented out!"
       - name: Get Flutter packages
         script: flutter pub get
       - name: Pod install
         script: |
           cd ios
           pod repo update
-          pod install --verbose
+          pod install
           cd ..
       - name: Set up code signing
         script: xcode-project use-profiles
@@ -43,6 +52,54 @@ workflows:
           echo "Building IPA in RELEASE mode..."
           flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
           echo "Build complete!"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      email:
+        recipients:
+          - c.ronaldo-mut@hotmail.com
+        notify:
+          success: true
+          failure: true
+
+  # Original workflow (for when privacy manifest issue is fixed)
+  ios-release:
+    name: iOS Full Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: ios-stable
+          include: true
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Update CocoaPods
+        script: sudo gem install cocoapods
+      - name: Deep Clean
+        script: |
+          flutter clean
+          rm -rf ios/Pods
+          rm -rf ios/Podfile.lock
+          rm -rf ios/.symlinks
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Pod install
+        script: |
+          cd ios
+          pod repo update
+          pod install
+          cd ..
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build IPA
+        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
