@@ -9,6 +9,8 @@ workflows:
       branch_patterns:
         - pattern: ios-stable
           include: true
+        - pattern: ios-clean
+          include: true
     environment:
       flutter: stable
       xcode: latest
