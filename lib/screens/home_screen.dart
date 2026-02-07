@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/gallery_detail_model.dart';
 import '../services/api_service.dart';
-import 'full_screen_image.dart';
 import 'gallery_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,59 +22,56 @@ class _HomeScreenState extends State<HomeScreen> {
     futureDetail = apiService.fetchGalleryDetails(lastEventAlbumId);
   }
 
+  // Contact URLs
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1E1E1E), // Dark background
+      appBar: AppBar(
+        title: const Text('POSE MEDIA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.black,
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: CustomScrollView(
         slivers: [
-          // Custom Header
+          // Subtitle and LAST EVENT badge
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.only(top: 60, bottom: 30, left: 20, right: 20),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black, Color(0xFF1E1E1E)],
-                ),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              color: const Color(0xFF1E1E1E),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center, // Center align
                 children: [
-                  const Text(
-                    'POSE MEDIA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5,
-                      fontFamily: 'Segoe UI', 
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   Text(
                     'Motorsports Photography & Social Media',
                     style: TextStyle(
-                      color: const Color(0xFFFF1744).withOpacity(0.9), // Red accent
-                      fontSize: 14,
+                      color: const Color(0xFFFF1744).withOpacity(0.9),
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.5,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 30), // More space
+                  const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Larger badge
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFF1744).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: const Color(0xFFFF1744).withOpacity(0.3)),
                     ),
                     child: const Text(
-                      'LAST EVENT', // UPPPERCASE
+                      'LAST EVENT',
                       style: TextStyle(
                         color: Color(0xFFFF1744),
-                        fontSize: 16, // Larger text
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2.0,
                       ),
@@ -85,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Album Grid (ID 26242)
+          // Album Grid - Same style as Gallery (2 columns)
           FutureBuilder<GalleryDetail>(
             future: futureDetail,
             builder: (context, snapshot) {
@@ -107,15 +104,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 100),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1, // Full width (row)
+                    crossAxisCount: 2, // 2 columns like Gallery
                     crossAxisSpacing: 16,
-                    mainAxisSpacing: 20, // More space between rows
-                    childAspectRatio: 1.5, // Wider aspect ratio
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.8, // Same as Gallery
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final image = snapshot.data!.images[index];
-                      return _buildImageTile(context, image, index, snapshot.data!); // Pass full detail for variations
+                      return _buildGalleryCard(context, image);
                     },
                     childCount: snapshot.data!.images.length,
                   ),
@@ -123,22 +120,73 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
+
+          // Contact Buttons - Footer (below gallery)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Website
+                  GestureDetector(
+                    onTap: () => _launchUrl('https://posekw.com'),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.public, color: Colors.white, size: 20),
+                        SizedBox(width: 6),
+                        Text('Website', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  // Instagram
+                  GestureDetector(
+                    onTap: () => _launchUrl('https://www.instagram.com/pose965'),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.photo_camera_outlined, color: Colors.white, size: 20),
+                        SizedBox(width: 6),
+                        Text('Instagram', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  // WhatsApp
+                  GestureDetector(
+                    onTap: () => _launchUrl('https://wa.me/+96565033587'),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.phone, color: Colors.white, size: 20),
+                        SizedBox(width: 6),
+                        Text('WhatsApp', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          // Bottom spacing for navbar
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 20),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildImageTile(BuildContext context, GalleryImage image, int index, GalleryDetail detail) {
+  // Gallery Card - Same style as AllGalleriesScreen
+  Widget _buildGalleryCard(BuildContext context, GalleryImage image) {
     return GestureDetector(
       onTap: () {
-        // Since Home shows an ALBUM (list of galleries), clicking an item (which is a sub-gallery)
-        // should open that Gallery's details.
-        // We stored the Sub-Gallery ID in image.id
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => GalleryDetailScreen(
-              galleryId: int.parse(image.id), // The ID is the sub-gallery ID
+              galleryId: int.parse(image.id),
               galleryTitle: image.title,
             ),
           ),
@@ -146,46 +194,48 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
           color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          fit: StackFit.expand,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network(
-              image.url, 
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
-                    color: Colors.white24,
-                    strokeWidth: 2,
-                  ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) =>
-                  const Center(child: Icon(Icons.broken_image, size: 20, color: Colors.white24)),
-            ),
-            // Overlay with Title for clearer navigation
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                color: Colors.black.withOpacity(0.6),
-                child: Text(
-                  image.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.network(
+                  image.url,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                        color: Colors.white24,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                image.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ],

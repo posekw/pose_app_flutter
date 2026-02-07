@@ -19,23 +19,13 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   glassmorphism: ^3.0.0
   shimmer: ^3.0.0
-  # screen_protector: ^1.2.0  # REMOVED: Causes iOS crash
   
-  # Utilities
-  url_launcher: ^6.3.1
-  url_launcher_android: ^6.3.14 # Forced upgrade to fix v1 embedding Android build error
-  url_launcher_ios: ^6.3.6
-  # url_launcher_android: ^6.3.10  # REMOVED: Causes iOS crash
-  path_provider_android: ^2.2.17
-  webview_flutter: ^4.8.0
-  webview_flutter_android: ^3.16.3
+  # Utilities - let Flutter resolve platform versions automatically
+  url_launcher: ^6.2.0
+  webview_flutter: ^4.4.0
   
-  # State Management (Simple provider or native ValueNotifier for now)
+  # State Management
   provider: ^6.1.1
-  
-  # Notifications - REMOVED
-  # firebase_core: ^2.24.2
-  # firebase_messaging: ^14.7.9
 
 dev_dependencies:
   flutter_test:
@@ -55,4 +45,3 @@ flutter:
 
   assets:
     - assets/images/
-
