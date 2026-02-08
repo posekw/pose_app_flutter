@@ -168,10 +168,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          // Privacy Policy Link
+          SliverToBoxAdapter(
+            child: GestureDetector(
+              onTap: () => _launchUrl('https://posekw.com/privacy-policy/'),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.4),
+                    fontSize: 11,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
           
           // Bottom spacing for navbar
           const SliverToBoxAdapter(
-            child: SizedBox(height: 20),
+            child: SizedBox(height: 100),
           ),
         ],
       ),
