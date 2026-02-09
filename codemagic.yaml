@@ -70,3 +70,34 @@ workflows:
         notify:
           success: true
           failure: true
+
+  android-build:
+    name: Android Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: android
+          include: true
+    scripts:
+      - name: Get Packages
+        script: flutter pub get
+      - name: Build Android APK
+        script: |
+          echo "=== Building APK in RELEASE mode ==="
+          flutter build apk --release
+          echo "=== Build Complete! ==="
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+    publishing:
+      email:
+        recipients:
+          - c.ronaldo-mut@hotmail.com
+        notify:
+          success: true
+          failure: true
