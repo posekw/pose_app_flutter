@@ -51,8 +51,6 @@ workflows:
       branch_patterns:
         - pattern: ios
           include: true
-        - pattern: main
-          include: true
     scripts:
       - *clean_and_setup
       - name: Set up code signing
