@@ -1,38 +1,79 @@
-# Antigravity Agent Guidelines
+بناءً على نتائج البحث التقني لمشروع **Pose Media**، تم صياغة القواعد التالية لاتباعها أثناء عملية التطوير لضمان الأداء العالي والأمان التام وتفادي المشكلات التقنية الشائعة:
 
-1.  **Context-First Exploration:**
-    Before proposing any solution, you MUST use your file reading tools to scan the codebase. Do not rely on your general knowledge; rely on the actual files present. If the user references a file, read it immediately.
+# Pose Media Development Guidelines
 
-2.  **The "Plan & Pause" Protocol:**
-    For any task involving more than one file:
-    * First, generate a high-level **Implementation Plan** (as text or an Artifact).
-    * **STOP** and wait for my explicit "Verified" or "Go ahead" command before writing any code.
+1. **Memory-First Media Handling:**
+* يجب استخدام `ListView.builder` أو `GridView.builder` حصراً لجميع القوائم لضمان بناء العناصر المرئية فقط وتوفير الذاكرة.
 
-3.  **Atomic Simplicity:**
-    * Keep changes "atomic"—modify the minimum number of lines required to solve the problem.
-    * Avoid refactoring unrelated code.
-    * If a solution seems complex, stop and ask: "Is there a simpler way to do this?"
 
-4.  **Transparent Explanations:**
-    Every step of the way, provide a high-level summary in the chat of *what* you changed and *why*. Do not just dump code blocks without context.
+* عند عرض الصور، يجب تحديد `memCacheWidth` و `memCacheHeight` لفك ضغط الصور بالأبعاد المطلوبة للعرض فقط لتجنب استهلاك الذاكرة العشوائية (RAM) بشكل مفرط.
 
-5.  **Living Documentation:**
-    Maintain a file named `ARCHITECTURE.md` in the root.
-    * This file must explain how the app works "inside and out."
-    * **CRITICAL:** If you make a structural change (e.g., adding a new database table, changing auth flow), you MUST update `ARCHITECTURE.md` as the final step of the task.
 
-6.  **Zero Hallucination Policy:**
-    Never guess about function names, variable types, or library versions. If you are unsure, use the `search` or `grep` tool to find the answer in the codebase before answering.
+* استخدام حزمة `cached_network_image` لإدارة التخزين المؤقت للصور على القرص والذاكرة.
 
-7.  **استحدم اللغه العربية:**
-    دائما اشرحلي الخطوات التي نقوم فيها بالعربي و ملخص عن الذي قمنا فيه بالعربي
 
-8.  **Server Infrastructure & Context:**
-    *   **Host:** Proxmox VE (192.168.50.227)
-    *   **Resources:** 16 Cores, 32GB RAM, 3TB+ Storage (LVM-Thin + Backups)
-    *   **Active Containers:**
-        *   `WebServer-1` (ID 235): Pose Website (running)
-        *   `WebServer-2` (ID 231): Elegent Website (running)
-        *   `whatsapp-bot` (ID 232): WhatsApp Bot (running)
-    *   **Credentials:** Root password for SSH/Proxmox is `MRVetteq8**` (Keep secure, do not output in logs).
-    *   **Network:** Ports 80, 443, 8006, 22 are open.
+
+
+2. **Lazy Loading Architecture:**
+* يجب تقسيم الكود برمجياً باستخدام `deferred as` عند استيراد المكتبات الثقيلة أو شاشات الحجز المعقدة لتقليل حجم الحزمة الأولية وسرعة تشغيل التطبيق.
+
+
+* اعتماد نظام "Pagination" (التجزئة) عند جلب البيانات من الخادم، بحيث يتم تحميل 20 عنصراً فقط في كل مرة.
+
+
+
+
+3. **Strict Content Protection (Secure Surface):**
+* **Android:** يجب تفعيل `FLAG_SECURE` في `MainActivity.kt` لمنع التقاط صور الشاشة أو تسجيل الفيديو وحماية المحتوى الحصري.
+
+
+* **iOS:** يجب تعتيم نافذة التطبيق أو إخفاؤها عند الانتقال للخلفية باستخدام `applicationWillResignActive` في `AppDelegate.swift` لحماية الخصوصية في مبدل التطبيقات.
+
+
+
+
+4. **Android 14/15 Compatibility:**
+* يجب معالجة إذن `READ_MEDIA_VISUAL_USER_SELECTED` الجديد في Android 14 للسماح للمستخدم باختيار صور محددة فقط.
+
+
+* بالنسبة لنظام Android 15، يجب استخدام الـ `SafeArea` بدقة لأن وضع "Edge-to-Edge" أصبح إجبارياً، مما قد يؤدي لتداخل الواجهة مع أشرطة النظام.
+
+
+
+
+5. **Performance-Aware UI (Glassmorphism):**
+* عند تطبيق تأثيرات الزجاج (Glassmorphism)، يجب حصر استخدام `BackdropFilter` في أصغر مساحة ممكنة باستخدام `ClipRRect` لتجنب هبوط معدل الإطارات (FPS).
+
+
+* في نظام iOS، إذا لوحظ بطء شديد بسبب محرك Impeller، يتم النظر في تحسين مساحة التمويه أو استخدام بدائل رسومية ثابتة.
+
+
+
+
+6. **External Integration & Safety:**
+* عند استخدام `url_launcher` لفتح واتساب أو المكالمات، يجب إضافة البروتوكولات (Scheme) المطلوبة في ملفات `AndroidManifest.xml` و `Info.plist` (مثل `https`, `tel`, `whatsapp`) لضمان عملها على الأنظمة الحديثة.
+
+
+* يجب معالجة عمليات الدفع عبر `webview_flutter` من خلال مراقبة روابط النجاح والفشل (Redirects) وإغلاق المتصفح الداخلي فور اكتمال العملية.
+
+
+
+
+7. **Zero Leak Policy:**
+* **إلزامي:** يجب استدعاء `dispose()` لجميع الـ `Controllers` (مثل `ScrollController`, `AnimationController`, `TextEditingController`) والاشتراكات في `Streams` لمنع تسريبات الذاكرة.
+
+
+
+
+
+---
+
+### ملخص الخطوات (باللغة العربية):
+
+قمنا بتحويل نتائج البحث التقني إلى قواعد صارمة تضمن استقرار تطبيق **Pose Media**. ركزنا على:
+
+* **إدارة الذاكرة:** من خلال تقنيات التحميل الذكي للصور والقوائم لمنع انهيار التطبيق.
+* **الأمان:** عبر تفعيل بروتوكولات حماية الشاشة ومنع التصوير لضمان خصوصية المحتوى.
+* **التوافق:** بتحديث سياسات الأذونات لتتوافق مع Android 14 و15، خاصة فيما يتعلق بالصور ووضع الشاشة الكاملة.
+* **الأداء البصري:** بموازنة جماليات تصميم "Glassmorphism" مع قدرات المعالجة الرسومية للأجهزة لضمان سلاسة الحركة (60 FPS).
+* **التكامل الخارجي:** بضبط إعدادات الروابط الخارجية (Deep Linking) لضمان عمل ميزات الاتصال والحجز والدفع دون مشاكل تقنية.

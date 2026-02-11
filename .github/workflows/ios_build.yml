@@ -39,8 +39,8 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH.orig
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          echo "$BUILD_CERTIFICATE_BASE64" | base64 -D -o $CERTIFICATE_PATH.orig
+          echo "$BUILD_PROVISION_PROFILE_BASE64" | base64 -D -o $PP_PATH
 
           # Re-package the P12 to ensure compatibility
           openssl pkcs12 -in $CERTIFICATE_PATH.orig -out $RUNNER_TEMP/temp.pem -nodes -passin pass:"$P12_PASSWORD"
@@ -53,6 +53,7 @@ jobs:
 
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t agg -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychains -s $KEYCHAIN_PATH
           security default-keychain -s $KEYCHAIN_PATH
 
@@ -80,7 +81,11 @@ jobs:
 
       - name: Build iOS
         run: |
-          flutter build ipa --release --export-options-plist=ios/Runner/ExportOptions.plist
+          # The PROFILE_NAME was detected in the previous step
+          flutter build ipa --release \
+            --export-options-plist=ios/Runner/ExportOptions.plist \
+            --code-sign-identity="Apple Distribution"
+
           echo "Listing build directory:"
           find build -name "*.ipa"
           ls -R build/ios
