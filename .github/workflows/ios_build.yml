@@ -60,8 +60,10 @@ jobs:
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(security cms -D -i "$PP_PATH"))
-          echo "Installing profile with UUID: $UUID"
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(security cms -D -i "$PP_PATH"))
+          echo "Installing profile with UUID: $UUID and Name: $PROFILE_NAME"
           cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/"$PROFILE_NAME.mobileprovision"
           
       - name: Update ExportOptions with Provisioning Profile
         run: |
