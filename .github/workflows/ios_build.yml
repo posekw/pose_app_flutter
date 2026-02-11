@@ -65,15 +65,17 @@ jobs:
           cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
           cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/"$PROFILE_NAME.mobileprovision"
           
+          # Export for next steps
+          echo "PP_UUID=$UUID" >> $GITHUB_ENV
+          echo "PP_NAME=$PROFILE_NAME" >> $GITHUB_ENV
+          
       - name: Update ExportOptions with Provisioning Profile
         run: |
-          # Extract Profile Name from the installed profile
-          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(security cms -D -i "$PP_PATH"))
-          echo "Detected Profile Name: $PROFILE_NAME"
+          echo "Using PP_UUID: $PP_UUID"
+          echo "Using PP_NAME: $PP_NAME"
           
-          # Update ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:com.posekw.gallery $UUID" ios/Runner/ExportOptions.plist
+          # Update ExportOptions.plist with the detected UUID
+          /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:com.posekw.gallery $PP_UUID" ios/Runner/ExportOptions.plist
           
           echo "Updated ExportOptions.plist:"
           cat ios/Runner/ExportOptions.plist
