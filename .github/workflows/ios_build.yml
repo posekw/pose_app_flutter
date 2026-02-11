@@ -73,7 +73,7 @@ jobs:
           echo "Detected Profile Name: $PROFILE_NAME"
           
           # Update ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:com.posekw.gallery $PROFILE_NAME" ios/Runner/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:com.posekw.gallery $UUID" ios/Runner/ExportOptions.plist
           
           echo "Updated ExportOptions.plist:"
           cat ios/Runner/ExportOptions.plist
