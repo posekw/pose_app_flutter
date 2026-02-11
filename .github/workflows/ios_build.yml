@@ -83,8 +83,7 @@ jobs:
         run: |
           # The PROFILE_NAME was detected in the previous step
           flutter build ipa --release \
-            --export-options-plist=ios/Runner/ExportOptions.plist \
-            --code-sign-identity="Apple Distribution"
+            --export-options-plist=ios/Runner/ExportOptions.plist
 
           echo "Listing build directory:"
           find build -name "*.ipa"
