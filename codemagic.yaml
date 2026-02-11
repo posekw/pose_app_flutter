@@ -1,20 +1,68 @@
+definitions:
+  scripts:
+    - &clean_and_setup
+      name: Clean and Setup Environment
+      script: |
+        echo "=== STEP 1: Deep Clean - DerivedData & Caches ==="
+        rm -rf ~/Library/Developer/Xcode/DerivedData
+        rm -rf ~/Library/Caches/CocoaPods
+        rm -rf ~/Library/Developer/Xcode/Archives
+        
+        echo "=== STEP 2: Installing Latest CocoaPods ==="
+        sudo gem install cocoapods
+        pod --version
+        
+        echo "=== STEP 3: Flutter Deep Clean ==="
+        flutter clean
+        rm -rf ios/build
+        rm -rf ios/.symlinks
+        rm -rf ios/Pods
+        rm -rf ios/Podfile.lock
+        rm -rf build
+        
+        echo "=== STEP 4: Get Packages ==="
+        flutter pub get
+        
+        echo "=== STEP 5: Pod Install with Repo Update ==="
+        cd ios
+        pod repo update
+        pod install --repo-update
+        cd ..
+        
+        echo "=== Environment Ready! ==="
+
 workflows:
+<<<<<<< HEAD
   # Clean iOS build - removes problematic plugins before building
   ios-clean-build:
     name: iOS Clean Build
+=======
+  ios-build:
+    name: iOS Build
+>>>>>>> android
     max_build_duration: 60
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.posekw.gallery
+      flutter: stable
+      xcode: latest
+      cocoapods: 1.16.2
     triggering:
       events:
         - push
       branch_patterns:
+<<<<<<< HEAD
         - pattern: main
+=======
+        - pattern: ios
+>>>>>>> android
           include: true
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
     scripts:
+<<<<<<< HEAD
       - name: Update CocoaPods
         script: |
           echo "Installing latest CocoaPods..."
@@ -45,13 +93,16 @@ workflows:
           pod repo update
           pod install
           cd ..
+=======
+      - *clean_and_setup
+>>>>>>> android
       - name: Set up code signing
         script: xcode-project use-profiles
-      - name: Build IPA
+      - name: Build iOS IPA
         script: |
-          echo "Building IPA in RELEASE mode..."
+          echo "=== Building IPA in RELEASE mode ==="
           flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
-          echo "Build complete!"
+          echo "=== Build Complete! ==="
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -63,15 +114,26 @@ workflows:
           success: true
           failure: true
 
+<<<<<<< HEAD
   # Original workflow (for when privacy manifest issue is fixed)
   ios-release:
     name: iOS Full Build
     max_build_duration: 60
     instance_type: mac_mini_m2
+=======
+  android-build:
+    name: Android Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+>>>>>>> android
     triggering:
       events:
         - push
       branch_patterns:
+<<<<<<< HEAD
         - pattern: ios-stable
           include: true
     environment:
@@ -103,6 +165,22 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+=======
+        - pattern: android
+          include: true
+        - pattern: main
+          include: true
+    scripts:
+      - name: Get Packages
+        script: flutter pub get
+      - name: Build Android APK
+        script: |
+          echo "=== Building APK in RELEASE mode ==="
+          flutter build apk --release
+          echo "=== Build Complete! ==="
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+>>>>>>> android
     publishing:
       email:
         recipients:

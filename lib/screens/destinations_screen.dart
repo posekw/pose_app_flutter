@@ -78,7 +78,7 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
             onRefresh: _refresh,
             color: const Color(0xFFFF1744),
             child: GridView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 100),
               physics: const AlwaysScrollableScrollPhysics(), // Ensure scroll for refresh
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

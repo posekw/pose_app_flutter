@@ -1,7 +1,7 @@
 name: pose_gallery_app
 description: A premium Flutter app for Pose Media using Glassmorphism design.
 publish_to: 'none'
-version: 1.0.1+23
+version: 1.0.3+53
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -19,19 +19,13 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   glassmorphism: ^3.0.0
   shimmer: ^3.0.0
-  # screen_protector: ^1.2.0  # REMOVED: Causes iOS crash
   
-  # Utilities
-  url_launcher: ^6.3.1
-  # Platform-specific constraints removed - let Codemagic resolve latest
-  webview_flutter: ^4.10.0
+  # Utilities - let Flutter resolve platform versions automatically
+  url_launcher: ^6.2.0
+  webview_flutter: ^4.4.0
   
-  # State Management (Simple provider or native ValueNotifier for now)
+  # State Management
   provider: ^6.1.1
-  
-  # Notifications - REMOVED
-  # firebase_core: ^2.24.2
-  # firebase_messaging: ^14.7.9
 
 dev_dependencies:
   flutter_test:
@@ -51,4 +45,3 @@ flutter:
 
   assets:
     - assets/images/
-

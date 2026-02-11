@@ -11,7 +11,7 @@ class ApiService {
   // Fetch Hierarchy: Destinations
   Future<List<Destination>> fetchDestinations() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/hierarchy/destinations'));
+      final response = await http.get(Uri.parse('$baseUrl/hierarchy/destinations')).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         List<dynamic> body = json.decode(response.body);
         return body.map((dynamic item) => Destination.fromJson(item)).toList();
@@ -26,7 +26,7 @@ class ApiService {
   // Fetch Hierarchy: SubCategories
   Future<List<TrackCategory>> fetchSubCategories(int parentId) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/hierarchy/categories?parent=$parentId'));
+      final response = await http.get(Uri.parse('$baseUrl/hierarchy/categories?parent=$parentId')).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         List<dynamic> body = json.decode(response.body);
         return body.map((dynamic item) => TrackCategory.fromJson(item)).toList();
@@ -49,7 +49,7 @@ class ApiService {
       final response = await http.get(
         Uri.parse(url),
         headers: {'User-Agent': 'PoseApp/1.0', 'Accept': 'application/json'},
-      );
+      ).timeout(const Duration(seconds: 10));
       print('Galleries Response: ${response.statusCode}');
 
       if (response.statusCode == 200) {
@@ -73,7 +73,7 @@ class ApiService {
       final response = await http.get(
         Uri.parse('$baseUrl/gallery/$id'),
         headers: {'User-Agent': 'PoseApp/1.0', 'Accept': 'application/json'},
-      );
+      ).timeout(const Duration(seconds: 10));
       print('Details Response: ${response.statusCode}');
 
       if (response.statusCode == 200) {
@@ -94,7 +94,7 @@ class ApiService {
         Uri.parse('$baseUrl/create-order'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'items': items}),
-      );
+      ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
