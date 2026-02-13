@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // Fixed url_launcher crash
 import 'package:provider/provider.dart';
-// import 'package:url_launcher/url_launcher.dart'; // REMOVED: Causes iOS crash
+import 'package:url_launcher/url_launcher.dart';
 import '../services/cart_service.dart';
 import '../services/api_service.dart';
 import '../models/cart_item_model.dart';
@@ -140,24 +140,13 @@ class CartScreen extends StatelessWidget {
       // Close Loading
       if (context.mounted) Navigator.pop(context);
 
-      // DISABLED: url_launcher removed due to iOS crash
       // Launch URL
-      // final uri = Uri.parse(paymentUrl);
-      // if (await canLaunchUrl(uri)) {
-      //   await launchUrl(uri, mode: LaunchMode.inAppWebView);
-      //   cartService.clearCart();
-      // } else {
-      //   throw 'Could not launch payment URL';
-      // }
-      
-      // Temporary workaround
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Checkout temporarily disabled - contact support'),
-            duration: Duration(seconds: 3),
-          ),
-        );
+      final uri = Uri.parse(paymentUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+        cartService.clearCart();
+      } else {
+        throw 'Could not launch payment URL';
       }
     } catch (e) {
       // Close Loading
