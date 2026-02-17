@@ -6,6 +6,7 @@ import '../services/cart_service.dart';
 import '../services/api_service.dart';
 import '../models/cart_item_model.dart';
 
+
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
@@ -77,8 +78,13 @@ class CartScreen extends StatelessWidget {
                         ),
                         title: Text(item.variation.name, 
                             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        subtitle: Text('${item.variation.price} KWD', style: const TextStyle(color: Color(0xFF00E5FF))),
-                        trailing: IconButton(
+                                    subtitle: Platform.isIOS 
+                                      ? (item.variation.name.toLowerCase().contains('custom') 
+                                          ? const Text('Price on request', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13))
+                                          : null)
+                                      : Text('${item.variation.price} KWD', style: const TextStyle(color: Color(0xFFFF1744))),
+
+                                    trailing: IconButton(
                           icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
                           onPressed: () {
                             cartService.removeFromCart(item);

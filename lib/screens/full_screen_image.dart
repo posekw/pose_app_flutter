@@ -5,6 +5,7 @@ import '../models/gallery_detail_model.dart';
 import '../models/cart_item_model.dart';
 import '../services/cart_service.dart';
 import '../services/fab_control_service.dart';
+
 // import 'package:screen_protector/screen_protector.dart'; // REMOVED: causes iOS crash
 
 class FullScreenImageScreen extends StatefulWidget {
@@ -36,9 +37,7 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
     // _enableSecureMode();
     // Enable Global Add to Cart FAB
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!Platform.isIOS) {
-        _updateFab();
-      }
+      _updateFab();
     });
   }
 
@@ -201,7 +200,12 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
               const SizedBox(height: 16),
               ...widget.variations.map((v) => ListTile(
                 title: Text(v.name, style: const TextStyle(color: Colors.white)),
-                trailing: Platform.isIOS ? null : Text('${v.price} KWD', style: const TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold)),
+                trailing: Platform.isIOS 
+                  ? (v.name.toLowerCase().contains('custom') 
+                      ? const Text('Price on request', style: TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold, fontSize: 13))
+                      : null)
+                  : Text('${v.price} KWD', style: const TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold)),
+
                 onTap: () {
                   CartService().addToCart(widget.images[_currentIndex], v);
                   Navigator.pop(context);

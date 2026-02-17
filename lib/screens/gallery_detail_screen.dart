@@ -8,6 +8,7 @@ import 'full_screen_image.dart';
 import '../services/fab_control_service.dart';
 import 'cart_screen.dart'; // Import CartScreen
 
+
 class GalleryDetailScreen extends StatefulWidget {
   final int galleryId;
   final String galleryTitle;
