@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'dart:ui';
 import '../models/gallery_detail_model.dart';
 import '../services/api_service.dart';
@@ -241,28 +242,29 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                 ),
               ),
               // Price Overlay
-              Positioned(
-                top: 8,
-                right: 8,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      color: Colors.black.withOpacity(0.5),
-                      child: Text(
-                        variations.isNotEmpty ? '${variations.first.price} KWD' : '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+              if (!Platform.isIOS)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        color: Colors.black.withOpacity(0.5),
+                        child: Text(
+                          variations.isNotEmpty ? '${variations.first.price} KWD' : '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

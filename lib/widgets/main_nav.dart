@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'dart:ui';
 import '../services/fab_control_service.dart';
 import '../screens/home_screen.dart';
@@ -164,9 +165,9 @@ class _MainNavigationState extends State<MainNavigation> {
                           children: [
                             const Icon(Icons.shopping_cart_outlined, color: Color(0xFFFF1744), size: 18), // Smaller icon
                             const SizedBox(width: 8), // Tighter spacing
-                            const Text(
-                              'ADD TO CART',
-                              style: TextStyle(
+                            Text(
+                              Platform.isIOS ? 'ADD TO LIST' : 'ADD TO CART',
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w900, 
                                 color: Colors.white, 
                                 fontSize: 14, // Smaller text
@@ -174,7 +175,7 @@ class _MainNavigationState extends State<MainNavigation> {
                                 fontStyle: FontStyle.italic, // Speed look
                               ),
                             ),
-                            if (_fabService.priceText.isNotEmpty) ...[
+                            if (!Platform.isIOS && _fabService.priceText.isNotEmpty) ...[
                               Container(
                                 height: 16, // Smaller divider
                                 margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -226,7 +227,7 @@ class _MainNavigationState extends State<MainNavigation> {
                   _buildNavItem(0, Icons.home_rounded, 'HOME'),
                   _buildNavItem(1, Icons.grid_view_rounded, 'GALLERY'),
                   _buildNavItem(2, Icons.calendar_month_rounded, 'SESSION'),
-                  _buildNavItem(3, Icons.shopping_cart_rounded, 'CART'),
+                  _buildNavItem(3, Icons.shopping_cart_rounded, Platform.isIOS ? 'MY LIST' : 'CART'),
                 ],
               ),
             ),

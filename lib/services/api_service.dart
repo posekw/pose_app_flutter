@@ -88,12 +88,38 @@ class ApiService {
     }
   }
   // Create Order
-  Future<String> createOrder(List<Map<String, dynamic>> items) async {
+  // Create Order
+  Future<String> createOrder(List<Map<String, dynamic>> items, Map<String, String> customerDetails, {String? coupon}) async {
     try {
+      final String fullName = customerDetails['name'] ?? '';
+      final List<String> nameParts = fullName.trim().split(' ');
+      final String firstName = nameParts.isNotEmpty ? nameParts.first : 'App';
+      final String lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : 'User';
+
+      final billingData = {
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': customerDetails['email'] ?? '',
+        'phone': customerDetails['phone'] ?? '',
+      };
+
+      final body = {
+        'payment_method': 'cod',
+        'payment_method_title': 'Cash on delivery',
+        'set_paid': false,
+        'billing': billingData,
+        'shipping': billingData,
+        'line_items': items, // Standard WC key
+        'items': items, // Keep for custom backend compatibility
+        'coupon': coupon ?? '', // Add Coupon
+      };
+
+      print('Creating Order with body: ${json.encode(body)}');
+
       final response = await http.post(
         Uri.parse('$baseUrl/create-order'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'items': items}),
+        body: json.encode(body),
       ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
