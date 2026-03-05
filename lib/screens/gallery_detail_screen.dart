@@ -243,7 +243,6 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                 ),
               ),
               // Price Overlay
-              if (!Platform.isIOS)
                 Positioned(
                   top: 8,
                   right: 8,

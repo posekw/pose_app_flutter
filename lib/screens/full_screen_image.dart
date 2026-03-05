@@ -200,26 +200,21 @@ class _FullScreenImageScreenState extends State<FullScreenImageScreen> {
               const SizedBox(height: 16),
               ...widget.variations.map((v) => ListTile(
                 title: Text(v.name, style: const TextStyle(color: Colors.white)),
-                trailing: Platform.isIOS 
-                  ? (v.name.toLowerCase().contains('custom') 
-                      ? const Text('Price on request', style: TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold, fontSize: 13))
-                      : null)
-                  : Text('${v.price} KWD', style: const TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold)),
+                trailing: Text('${v.price} KWD', style: const TextStyle(color: Color(0xFFFF1744), fontWeight: FontWeight.bold)),
 
                 onTap: () {
                   CartService().addToCart(widget.images[_currentIndex], v);
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(Platform.isIOS ? '${v.name} added to list' : '${v.name} added to cart'),
-                      backgroundColor: const Color(0xFFFF1744), // Red
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${v.name} added to list'),
+                        backgroundColor: const Color(0xFFFF1744), // Red
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
                 },
               )),
-              if (Platform.isIOS)
-                const Padding(
+              const Padding(
                   padding: EdgeInsets.only(top: 8.0, left: 16, right: 16),
                   child: Text(
                     '* Custom sizes and materials (Acrylic, Canvas, Fine Art Paper) available on request. Prices vary based on selection.',

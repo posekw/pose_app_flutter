@@ -166,7 +166,7 @@ class _MainNavigationState extends State<MainNavigation> {
                             const Icon(Icons.shopping_cart_outlined, color: Color(0xFFFF1744), size: 18), // Smaller icon
                             const SizedBox(width: 8), // Tighter spacing
                             Text(
-                              Platform.isIOS ? 'ADD TO LIST' : 'ADD TO CART',
+                              'ADD TO LIST',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900, 
                                 color: Colors.white, 
@@ -175,7 +175,7 @@ class _MainNavigationState extends State<MainNavigation> {
                                 fontStyle: FontStyle.italic, // Speed look
                               ),
                             ),
-                            if (!Platform.isIOS && _fabService.priceText.isNotEmpty) ...[
+                            if (_fabService.priceText.isNotEmpty) ...[
                               Container(
                                 height: 16, // Smaller divider
                                 margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -227,7 +227,7 @@ class _MainNavigationState extends State<MainNavigation> {
                   _buildNavItem(0, Icons.home_rounded, 'HOME'),
                   _buildNavItem(1, Icons.grid_view_rounded, 'GALLERY'),
                   _buildNavItem(2, Icons.calendar_month_rounded, 'SESSION'),
-                  _buildNavItem(3, Icons.shopping_cart_rounded, Platform.isIOS ? 'MY LIST' : 'CART'),
+                  _buildNavItem(3, Icons.shopping_cart_rounded, 'MY LIST'),
                 ],
               ),
             ),

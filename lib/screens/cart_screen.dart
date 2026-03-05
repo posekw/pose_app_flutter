@@ -17,8 +17,8 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF1E1E1E),
       appBar: AppBar(
-        title: Text(Platform.isIOS ? 'My Selections' : 'Shopping Cart', 
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('My Selections', 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
@@ -78,11 +78,7 @@ class CartScreen extends StatelessWidget {
                         ),
                         title: Text(item.variation.name, 
                             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                    subtitle: Platform.isIOS 
-                                      ? (item.variation.name.toLowerCase().contains('custom') 
-                                          ? const Text('Price on request', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13))
-                                          : null)
-                                      : Text('${item.variation.price} KWD', style: const TextStyle(color: Color(0xFFFF1744))),
+                                    subtitle: Text('${item.variation.price} KWD', style: const TextStyle(color: Color(0xFFFF1744))),
 
                                     trailing: IconButton(
                           icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
@@ -102,7 +98,6 @@ class CartScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (!Platform.isIOS)
                       Text(
                         'Total: ${cartService.total} KWD',
                         style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -113,9 +108,9 @@ class CartScreen extends StatelessWidget {
                         backgroundColor: const Color(0xFF00E5FF),
                         foregroundColor: Colors.black,
                       ),
-                      child: Text(
-                        Platform.isIOS ? 'Request Quote' : 'Checkout',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      child: const Text(
+                        'Checkout',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -187,37 +182,13 @@ class CartScreen extends StatelessWidget {
       // Close Loading
       if (context.mounted) Navigator.pop(context);
 
-      if (Platform.isIOS) {
-        // Show Success Dialog for iOS (Request Quote flow)
-        if (context.mounted) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              backgroundColor: const Color(0xFF1E1E1E),
-              title: const Text('Inquiry Sent', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              content: const Text(
-                'Your selection has been sent! We will contact you soon with printing options and pricing.',
-                style: TextStyle(color: Colors.white70),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK', style: TextStyle(color: Color(0xFF00E5FF))),
-                ),
-              ],
-            ),
-          );
-          cartService.clearCart();
-        }
+      // Launch Payment URL
+      final uri = Uri.parse(paymentUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+        cartService.clearCart();
       } else {
-        // Launch Payment URL for other platforms
-        final uri = Uri.parse(paymentUrl);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.inAppWebView);
-          cartService.clearCart();
-        } else {
-          throw 'Could not launch payment URL';
-        }
+        throw 'Could not launch payment URL';
       }
     } catch (e) {
       // Close Loading
@@ -299,7 +270,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
           },
           child: _isLoading 
             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
-            : Text(Platform.isIOS ? 'Send Request' : 'Pay Now', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+            : const Text('Pay Now', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
         ),
       ],
     );
